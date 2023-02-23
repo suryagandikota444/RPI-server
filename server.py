@@ -9,7 +9,7 @@ def write_read(x):
     data = arduino.readline()
     return data
 i = 0
-
+x = 0
 while(1):
      write_read(i%2+1)
      time.sleep(5)
