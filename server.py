@@ -22,18 +22,19 @@ def write_read(x):
 def on_snapshot(doc_snap, changes, read_time):
     for doc in doc_snap:
         docDict = doc.to_dict()
-        isTrue = docDict["isTrue"]
-        if isTrue == "1":
+        isTrue = docDict["num"]
+        num = int(isTrue)
+        if num % 2 == 0:
             print(f"Snap isTrue: {isTrue}")
             write_read(b'1')
-        if isTrue == "2":
+        elif num % 2 == 1:
             print(f"Snap isTrue: {isTrue}")
             write_read(b'2')
         global boolValue
         boolValue = isTrue
     callback_done.set()
 
-doc_ref = db.collection(u"test").document(u"test")
+doc_ref = db.collection(u"test").document(u"editTest")
 
 doc_watch = doc_ref.on_snapshot(on_snapshot)
 
