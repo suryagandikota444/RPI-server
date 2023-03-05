@@ -12,8 +12,6 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 callback_done = threading.Event()
 
-boolValue = False
-
 def write_read(x):
     arduino.write(x)
     data = arduino.readline()
@@ -22,16 +20,55 @@ def write_read(x):
 def on_snapshot(doc_snap, changes, read_time):
     for doc in doc_snap:
         docDict = doc.to_dict()
-        isTrue = docDict["num"]
-        num = int(isTrue)
-        if num % 2 == 0:
-            print(f"Snap isTrue: {isTrue}")
-            write_read(b'1')
-        elif num % 2 == 1:
-            print(f"Snap isTrue: {isTrue}")
-            write_read(b'2')
-        global boolValue
-        boolValue = isTrue
+        position = docDict["position"]
+        if position == "A0":
+            print(f"A0")
+            write_read(b'A0')
+        elif position == "A1":
+            print(f"A1")
+            write_read(b'A1')
+        elif position == "A2":
+            print(f"A2")
+            write_read(b'A2')
+        elif position == "A3":
+            print(f"A3")
+            write_read(b'A3')
+        elif position == "A0":
+            print(f"A0")
+            write_read(b'B0')
+        elif position == "B1":
+            print(f"B1")
+            write_read(b'B1')
+        elif position == "B2":
+            print(f"B2")
+            write_read(b'B2')
+        elif position == "B3":
+            print(f"B3")
+            write_read(b'B3')
+        elif position == "C0":
+            print(f"C0")
+            write_read(b'C0')
+        elif position == "C1":
+            print(f"C1")
+            write_read(b'C1')
+        elif position == "C2":
+            print(f"C2")
+            write_read(b'C2')
+        elif position == "C3":
+            print(f"C3")
+            write_read(b'C3')
+        elif position == "C4":
+            print(f"C4")
+            write_read(b'C4')
+        elif position == "C5":
+            print(f"C5")
+            write_read(b'C5')
+        elif position == "C6":
+            print(f"C6")
+            write_read(b'C6')
+        elif position == "C7":
+            print(f"C7")
+            write_read(b'C7')
     callback_done.set()
 
 doc_ref = db.collection(u"test").document(u"editTest")
