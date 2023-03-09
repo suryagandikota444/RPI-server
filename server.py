@@ -4,7 +4,7 @@ import threading
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+arduino = 1 #serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
 cred = credentials.Certificate("csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
 firebase_admin.initialize_app(cred)
@@ -13,11 +13,11 @@ db = firestore.client()
 callback_done = threading.Event()
 
 def write_read(x):
-    arduino.write(x)
-    data = arduino.readline()
+    #arduino.write(x)
+    data = 1 #arduino.readline()
     return data
 
-def on_snapshot(doc_snap, changes, read_time):
+def on_test_snapshot(doc_snap, changes, read_time):
     for doc in doc_snap:
         docDict = doc.to_dict()
         position = docDict["position"]
@@ -71,9 +71,18 @@ def on_snapshot(doc_snap, changes, read_time):
             write_read(b'C7')
     callback_done.set()
 
-doc_ref = db.collection(u"test").document(u"editTest")
+def on_queue_snapshot(doc_snap, changes, read_time):
+    print(changes)
+    for doc in doc_snap:
+        print(doc)
 
-doc_watch = doc_ref.on_snapshot(on_snapshot)
+test_ref = db.collection(u"test").document(u"editTest")
+queue_ref = db.collection(u"Requests")
+
+watch_bin = test_ref.on_snapshot(on_test_snapshot)
+queue_watch = queue_ref.on_snapshot(on_queue_snapshot)
 
 while True:
     time.sleep(0.5)
+    # print(dir(queue_ref.list_documents))
+    # print()
