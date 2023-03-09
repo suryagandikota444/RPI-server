@@ -6,6 +6,13 @@
 #define LED_pin 10
 #define NUM_LEDs 21
 
+#include "FastLED.h"
+#include <pixeltypes.h>
+
+//Defining the LED pins
+#define LED_pin 10
+#define NUM_LEDs 21
+
 const int stepPin = 3;
 const int dirPin = 4;
 
@@ -148,15 +155,16 @@ void loop()
           
             for(int LEDIt = 0; LEDIt<21; LEDIt++)
             {
-              if(LEDIt>14)
-              {
-                LedStrip[LEDIt]=CRGB::DarkOrchid;
-              }
-              else
-              {
-                LedStrip[LEDIt]=CRGB::Black;
-              }
+            if(LEDIt>14)
+            {
+              LedStrip[LEDIt]=CRGB::DarkOrchid;
             }
+
+            else
+            {
+              LedStrip[LEDIt]=CRGB::Black;
+            }
+          }
       }
           FastLED.show();     
           delay(10); 
