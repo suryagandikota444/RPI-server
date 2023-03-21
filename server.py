@@ -7,7 +7,7 @@ import numpy as np
 import os
 from mfrc522 import SimpleMFRC522
 
-arduino = 1 #serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
 cred = credentials.Certificate("csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
 firebase_admin.initialize_app(cred)
@@ -18,8 +18,8 @@ rfid = SimpleMFRC522()
 queue_count = 0
 
 def write_read(x):
-    #arduino.write(x)
-    data = 1 #arduino.readline()
+    arduino.write(x)
+    data = arduino.readline()
     return data
 
 def process_request(position):
@@ -130,33 +130,47 @@ def on_test_snapshot(doc_snap, changes, read_time):
 
 def on_queue_snapshot(doc_snap, changes, read_time):
     arr = []
-    curr_request = doc_snap[0].to_dict()
-    for doc in doc_snap:
-        doc_dict = doc.to_dict()
-        if doc_dict['timestamp'].timestamp() < curr_request['timestamp'].timestamp():
-            curr_request = doc_dict
-            curr_request["id"] = doc.id
-    is_alexa = curr_request["is_alexa"]
-    print(f"{is_alexa}") 
-    hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"]))
-    hist_doc = hist_ref.get()
-    if hist_doc.exists:
-        hist_doc_dict = hist_doc.to_dict()
-        items_ref = db.collection(u"Items").document(u'{}'.format(hist_doc_dict["item_id"]))
-        items_doc = items_ref.get()
-        if items_doc.exists:
-            if is_alexa:
-                ######## DO RFID VERFICATION HERE ########
-                print("Do RFID verification here")
-                process_request(items_doc.to_dict()["bin_id"])
+    if len(doc_snap) > 0:
+        curr_request = doc_snap[0].to_dict()
+        curr_request["id"] = doc_snap[0].id
+        is_alexa = curr_request["is_alexa"] 
+        hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"]))
+        hist_doc = hist_ref.get()
+        if hist_doc.exists:
+            hist_doc_dict = hist_doc.to_dict()
+            items_ref = db.collection(u"Items").document(u'{}'.format(hist_doc_dict["item_id"]))
+            items_doc = items_ref.get()
+            if items_doc.exists:
+                if is_alexa:
+                    ### RFID Verification ###
+                    id = ''
+                    while True:
+                        # id, text = rfid.read()
+                        id = input("Please enter rfid tag: ")
+                        break
+                    user_docs = db.collection(u'Users').stream()
+                    for user in user_docs:
+                        user_dict = user.to_dict()
+                        if user_dict["rfid_tag"] == id:
+                            print("user found")
+                            hist_ref.set({
+                                u'user_id': user.id
+                            }, merge=True)
+                        else:
+                            print("Please register RFID tag to user!")
+                    process_request(items_doc.to_dict()["bin_id"])
+                    print(curr_request["id"])
+                    db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete()
+                else:
+                    process_request(items_doc.to_dict()["bin_id"])
+                    print(curr_request)
+                    db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete()
             else:
-                process_request(items_doc.to_dict()["bin_id"])
+                print(u'item_id: {} does not exist!'.format(hist_doc_dict["item_id"]))
         else:
-            print(u'item_id: {} does not exist!'.format(hist_doc_dict["item_id"]))
+            print(u'history_id: {} does not exist!'.format(curr_request["history_id"]))
     else:
-        print(u'history_id: {} does not exist!'.format(curr_request["history_id"]))
-
-     
+        print("No requests!")
 
 test_ref = db.collection(u"test").document(u"editTest")
 queue_ref = db.collection(u"Requests")
