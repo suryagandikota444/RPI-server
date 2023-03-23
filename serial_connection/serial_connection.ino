@@ -26,10 +26,8 @@ void setup()
 
   /*
   HALL EFFECT SENSOR CODE - TESTING
-
   pinMode(hallPin, INPUT);
   digitalWite(dirPin, HIGH);  // Check if this line is needed
-
   while (digitalRead(hallPin) == LOW)
   {
     digitalWrite(stepPin, HIGH);
@@ -37,7 +35,6 @@ void setup()
     digitalWrite(stepPin, LOW);
     delayMicroseconds(3000);
   }
-
   */
 
   Serial.begin(115200);
@@ -68,7 +65,7 @@ void loop()
       if (targetLocation == 'A')
       {
         // First Set of LEDS light up
-        for (int LEDIt = 0; LEDIt < 20; LEDIt++)
+        for (int LEDIt = 0; LEDIt < 21; LEDIt++)
         {
           if (LEDIt < 7)
           {
