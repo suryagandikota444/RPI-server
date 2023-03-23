@@ -7,7 +7,7 @@ import numpy as np
 import os
 from mfrc522 import SimpleMFRC522
 
-arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+arduino = 1 #serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
 cred = credentials.Certificate("csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
 firebase_admin.initialize_app(cred)
@@ -18,8 +18,8 @@ rfid = SimpleMFRC522()
 queue_count = 0
 
 def write_read(x):
-    arduino.write(x)
-    data = arduino.readline()
+    # arduino.write(x)
+    data = 1 #arduino.readline()
     return data
 
 def process_request(position):
@@ -141,12 +141,13 @@ def on_queue_snapshot(doc_snap, changes, read_time):
             items_ref = db.collection(u"Items").document(u'{}'.format(hist_doc_dict["item_id"]))
             items_doc = items_ref.get()
             if items_doc.exists:
-                if is_alexa:
+                if not is_alexa:
                     ### RFID Verification ###
                     id = ''
                     while True:
-                        # id, text = rfid.read()
-                        id = input("Please enter rfid tag: ")
+                        print("Please use rfid tag")
+                        id, text = rfid.read()
+                        # id = input("Please enter rfid tag: ")
                         break
                     user_docs = db.collection(u'Users').stream()
                     for user in user_docs:
