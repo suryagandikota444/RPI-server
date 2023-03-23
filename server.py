@@ -130,25 +130,32 @@ def on_test_snapshot(doc_snap, changes, read_time):
 
 def on_queue_snapshot(doc_snap, changes, read_time):
     arr = []
+
+    #enter the loop only if there are any items in collection on change
     if len(doc_snap) > 0:
-        curr_request = doc_snap[0].to_dict()
-        curr_request["id"] = doc_snap[0].id
-        is_alexa = curr_request["is_alexa"] 
-        hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"]))
+        curr_request = doc_snap[0].to_dict() #save curr request to send right data to history record
+        curr_request["id"] = doc_snap[0].id 
+        is_alexa = curr_request["is_alexa"] #check if alexa
+        
+        # route for links between collection is: History -> Items -> Bin 
+        hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"])) # first, history
         hist_doc = hist_ref.get()
         if hist_doc.exists:
+            
             hist_doc_dict = hist_doc.to_dict()
-            items_ref = db.collection(u"Items").document(u'{}'.format(hist_doc_dict["item_id"]))
+            items_ref = db.collection(u"Items").document(u'{}'.format(hist_doc_dict["item_id"])) # second, items
             items_doc = items_ref.get()
             if items_doc.exists:
-                if not is_alexa:
+
+                # branch for alexa because it needs rfid verification
+                if is_alexa:
                     ### RFID Verification ###
                     id = ''
                     while True:
                         print("Please use rfid tag")
                         id, text = rfid.read()
-                        # id = input("Please enter rfid tag: ")
                         break
+
                     user_docs = db.collection(u'Users').stream()
                     for user in user_docs:
                         user_dict = user.to_dict()
@@ -159,10 +166,14 @@ def on_queue_snapshot(doc_snap, changes, read_time):
                             }, merge=True)
                         else:
                             print("Please register RFID tag to user!")
+                    
+                    # send bin to read_write function to be sent to arduino
                     process_request(items_doc.to_dict()["bin_id"])
                     print(curr_request["id"])
-                    db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete()
+                    db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete() #delete queued item
                 else:
+
+                    # no verification since its from phone
                     process_request(items_doc.to_dict()["bin_id"])
                     print(curr_request)
                     db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete()
