@@ -26,10 +26,8 @@ void setup()
 
   /*
   HALL EFFECT SENSOR CODE - TESTING
-
   pinMode(hallPin, INPUT);
   digitalWite(dirPin, HIGH);  // Check if this line is needed
-
   while (digitalRead(hallPin) == LOW)
   {
     digitalWrite(stepPin, HIGH);
@@ -37,7 +35,6 @@ void setup()
     digitalWrite(stepPin, LOW);
     delayMicroseconds(3000);
   }
-
   */
 
   Serial.begin(115200);
