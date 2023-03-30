@@ -187,6 +187,7 @@ def on_queue_snapshot(doc_snap, changes, read_time):
 
 test_ref = db.collection(u"test").document(u"editTest")
 queue_ref = db.collection(u"Requests")
+rfid_ref = db.collection(u"Requests")
 
 watch_bin = test_ref.on_snapshot(on_test_snapshot)
 queue_watch = queue_ref.on_snapshot(on_queue_snapshot)

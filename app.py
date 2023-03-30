@@ -2,7 +2,7 @@ from flask import Flask, render_template
 import serial
 
 app = Flask(__name__)
-ser = serial.Serial('/dev/ttyACM0', 9600)  # replace with your Arduino port and baud rate
+ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
 @app.route('/')
 def index():
