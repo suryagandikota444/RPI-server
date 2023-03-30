@@ -19,14 +19,16 @@ int numOfPulses = 0;
 
 //Defining LED Items
 
-#define LED_pin 12
+#define LED_pin1 12
+#define LED_pin2 9
 #define NUM_LEDs 21
 #define BRIGHTNESS 130
 #define HUE 185 //Value between 1 and 360 [RED =0,Green =120, Blue =240]
 #define SAT 255 //KEEP at 255
 #define VAL 255 //KEEP at 255
 
-CRGB LedStrip[NUM_LEDs];
+CRGB LedStrip1[NUM_LEDs];
+CRGB LedStrip2[NUM_LEDs];
 
 void setup() 
 {
@@ -38,31 +40,41 @@ void setup()
   //HALL EFFECT SENSOR CODE - TESTING
   pinMode(A2, INPUT);
   
-  // while (analogRead(A2) > 500)
-  // {
-  //   digitalWrite(stepPin, HIGH);
-  //   delayMicroseconds(5000);
-  //   digitalWrite(stepPin, LOW);
-  //   delayMicroseconds(5000);
-  // }
+   while (analogRead(A2) > 100)
+  {
+     digitalWrite(stepPin, HIGH);
+     delayMicroseconds(5000);
+     digitalWrite(stepPin, LOW);
+     delayMicroseconds(5000);
+   }
   
   
   Serial.begin(115200);
   Serial.setTimeout(1);
-  FastLED.addLeds<WS2812B, LED_pin, GRB>(LedStrip,NUM_LEDs);
+  FastLED.addLeds<WS2812B, LED_pin1, GRB>(LedStrip1,NUM_LEDs);
+  FastLED.addLeds<WS2812B, LED_pin2, GRB>(LedStrip2,NUM_LEDs);
   FastLED.setBrightness(BRIGHTNESS);
 
   //Defining LED Color
   CHSV LEDColor = CHSV(HUE, SAT, VAL);
   for(int x=0; x<7; x++)
   {
-    LedStrip[x]=LEDColor;
+    LedStrip1[x]=LEDColor;
+    LedStrip2[x]=LEDColor;
   }
   FastLED.show();    
   delay(10);  
 
+  //HALL EFFECT TESTER
+  /*while (true)
+   {
+      int x = analogRead(A2);
+        Serial.print("Analog Sensor Reading: ");
+      Serial.println(x);        
+      
+      delay(100);
+   }*/
 
-   
 
 }
 void loop() 
@@ -96,11 +108,13 @@ void loop()
         {
           if(LEDIt<7)
           {
-            LedStrip[LEDIt] = LEDColor;
+            LedStrip1[LEDIt] = LEDColor;
+            LedStrip2[LEDIt] = LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]= CRGB::Black;
+            LedStrip1[LEDIt]= CRGB::Black;
+            LedStrip2[LEDIt]= CRGB::Black;
           }   
         }
         FastLED.show();    
@@ -113,11 +127,13 @@ void loop()
         {
           if(LEDIt>=7 && LEDIt<14)
           {
-            LedStrip[LEDIt] = LEDColor;
+            LedStrip1[LEDIt] = LEDColor;
+            LedStrip2[LEDIt] = LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]=CRGB::Black;
+            LedStrip1[LEDIt]=CRGB::Black;
+            LedStrip2[LEDIt]=CRGB::Black;
           }
         }
         FastLED.show();    
@@ -150,11 +166,13 @@ void loop()
         {
           if(LEDIt>=14)
           {
-            LedStrip[LEDIt] = LEDColor;
+            LedStrip1[LEDIt] = LEDColor;
+            LedStrip2[LEDIt] = LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]=CRGB::Black;
+            LedStrip1[LEDIt]=CRGB::Black;
+            LedStrip2[LEDIt]=CRGB::Black;
           }
         }
       
@@ -187,11 +205,13 @@ void loop()
         {
           if(LEDIt<=7)
           {
-            LedStrip[LEDIt] = LEDColor;
+            LedStrip1[LEDIt] = LEDColor;
+            LedStrip2[LEDIt] = LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]=CRGB::Black;
+            LedStrip1[LEDIt]=CRGB::Black;
+            LedStrip2[LEDIt]=CRGB::Black;
           }   
         }
         FastLED.show();    
@@ -204,11 +224,13 @@ void loop()
         {
           if(LEDIt>=7 && LEDIt<14)
           {
-            LedStrip[LEDIt] = LEDColor;
+            LedStrip1[LEDIt] = LEDColor;
+            LedStrip2[LEDIt] = LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]=CRGB::Black;
+            LedStrip1[LEDIt]=CRGB::Black;
+            LedStrip2[LEDIt]=CRGB::Black;
           }
         }
         FastLED.show();    
@@ -241,11 +263,13 @@ void loop()
         {
           if(LEDIt>=14)
           {
-            LedStrip[LEDIt]= LEDColor;
+            LedStrip1[LEDIt]= LEDColor;
+            LedStrip2[LEDIt]= LEDColor;
           }
           else
           {
-            LedStrip[LEDIt]=CRGB::Black;
+            LedStrip1[LEDIt]=CRGB::Black;
+            LedStrip2[LEDIt]=CRGB::Black;
           }
         }
         FastLED.show();     
