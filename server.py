@@ -185,6 +185,10 @@ def on_queue_snapshot(doc_snap, changes, read_time):
     else:
         print("No requests!")
 
+def on_queue_snapshot(doc_snap, changes, read_time):
+
+    for doc in doc_snap:
+       pass
 test_ref = db.collection(u"test").document(u"editTest")
 queue_ref = db.collection(u"Requests")
 rfid_ref = db.collection(u"Requests")
