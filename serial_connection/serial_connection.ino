@@ -15,11 +15,13 @@ char currentLocation = 'A';
 int currentIndex = 0;
 int numOfPulses = 0;
 
+
+
 //Defining LED Items
 
 #define LED_pin 12
 #define NUM_LEDs 21
-#define BRIGHTNESS 100
+#define BRIGHTNESS 130
 #define HUE 185 //Value between 1 and 360 [RED =0,Green =120, Blue =240]
 #define SAT 255 //KEEP at 255
 #define VAL 255 //KEEP at 255
@@ -34,23 +36,34 @@ void setup()
 
   
   //HALL EFFECT SENSOR CODE - TESTING
-  //pinMode(A2, INPUT);
-  //digitalWite(dirPin, HIGH);  // Check if this line is needed
-  // while (analogRead(A2) == LOW)
+  pinMode(A2, INPUT);
+  
+  // while (analogRead(A2) > 500)
   // {
   //   digitalWrite(stepPin, HIGH);
-  //   delayMicroseconds(3000);
+  //   delayMicroseconds(5000);
   //   digitalWrite(stepPin, LOW);
-  //   delayMicroseconds(3000);
+  //   delayMicroseconds(5000);
   // }
   
-
-
-
+  
   Serial.begin(115200);
   Serial.setTimeout(1);
   FastLED.addLeds<WS2812B, LED_pin, GRB>(LedStrip,NUM_LEDs);
   FastLED.setBrightness(BRIGHTNESS);
+
+  //Defining LED Color
+  CHSV LEDColor = CHSV(HUE, SAT, VAL);
+  for(int x=0; x<7; x++)
+  {
+    LedStrip[x]=LEDColor;
+  }
+  FastLED.show();    
+  delay(10);  
+
+
+   
+
 }
 void loop() 
 {
@@ -69,10 +82,10 @@ void loop()
       if (temp < 0) 
       {
         int temp2 = temp + 200;
-        numOfPulses = temp2 * 3;
+        numOfPulses = temp2 * 3 * 2;
       } else 
       {
-        numOfPulses = temp * 3;
+        numOfPulses = temp * 3 * 2;
       }
 
 
@@ -123,11 +136,11 @@ void loop()
       if (temp < 0) 
       {
         int temp2 = temp + 200;
-        numOfPulses = temp2 * 3;
+        numOfPulses = temp2 * 3 * 2;
       } 
       else 
       {
-        numOfPulses = temp * 3;
+        numOfPulses = temp * 3 * 2;
       }
 
       if(targetLocation == 'C') 
@@ -160,11 +173,11 @@ void loop()
       if (temp < 0) 
       {
         int temp2 = temp + 200;
-        numOfPulses = temp2 * 3;
+        numOfPulses = temp2 * 3 * 2;
       } 
       else 
       {
-        numOfPulses = temp * 3;
+        numOfPulses = temp * 3 * 2;
       }
 
       if(targetLocation == 'A') 
@@ -216,10 +229,10 @@ void loop()
       if (temp < 0) 
       {
         int temp2 = temp + 200;
-        numOfPulses = temp2 * 3;
+        numOfPulses = temp2 * 3 * 2;
       } else 
       {
-        numOfPulses = temp * 3;
+        numOfPulses = temp * 3 * 2;
       }
       if(targetLocation == 'C') 
       {
