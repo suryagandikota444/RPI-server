@@ -185,16 +185,26 @@ def on_queue_snapshot(doc_snap, changes, read_time):
     else:
         print("No requests!")
 
-def on_queue_snapshot(doc_snap, changes, read_time):
-
+def on_rfid_snapshot(doc_snap, changes, read_time):
     for doc in doc_snap:
-       pass
+        docDict = doc.to_dict()
+        if docDict['live'] == True:
+            print("Please use rfid tag")
+            while True:
+                id, text = rfid.read()
+                print(id)
+                break
+            db.collection(u'Users').document(u'{}'.format(docDict["userid"])).update({ "rfid_tag": id })
+            db.collection(u'RFIDinit').document(u'VTflY8VUypi61GVplO8p').update({ "live": False, "userid": "" })
+
+
 test_ref = db.collection(u"test").document(u"editTest")
 queue_ref = db.collection(u"Requests")
-rfid_ref = db.collection(u"Requests")
+rfid_ref = db.collection(u"RFIDinit").document(u"VTflY8VUypi61GVplO8p")
 
 watch_bin = test_ref.on_snapshot(on_test_snapshot)
 queue_watch = queue_ref.on_snapshot(on_queue_snapshot)
+rfid_watch = rfid_ref.on_snapshot(on_rfid_snapshot)
 
 while True:
     time.sleep(0.5)

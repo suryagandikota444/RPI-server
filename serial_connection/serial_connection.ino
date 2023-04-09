@@ -40,13 +40,13 @@ void setup()
   //HALL EFFECT SENSOR CODE - TESTING
   pinMode(A2, INPUT);
   
-   while (analogRead(A2) > 100)
+  while (analogRead(A2) > 100)
   {
-     digitalWrite(stepPin, HIGH);
-     delayMicroseconds(5000);
-     digitalWrite(stepPin, LOW);
-     delayMicroseconds(5000);
-   }
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(5000);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(5000);
+  }
   
   
   Serial.begin(115200);
@@ -140,10 +140,10 @@ void loop()
         delay(10);  
       }
 
-      Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
-      Serial.println("(After) Location: " + input);
-      Serial.println("Steps taken: " + String(numOfPulses));
-      Serial.println();
+      // Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
+      // Serial.println("(After) Location: " + input);
+      // Serial.println("Steps taken: " + String(numOfPulses));
+      // Serial.println();
     }
     else if ((currentLocation == 'A' || currentLocation == 'B') && (targetLocation == 'C')) 
     {
@@ -179,10 +179,10 @@ void loop()
         FastLED.show();     
         delay(10);
       }
-      Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
-      Serial.println("(After) Location: " + input);
-      Serial.println("Steps taken: " + String(numOfPulses));
-      Serial.println();
+      // Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
+      // Serial.println("(After) Location: " + input);
+      // Serial.println("Steps taken: " + String(numOfPulses));
+      // Serial.println();
     }
     else if ((currentLocation == 'C') && (targetLocation == 'A' || targetLocation == 'B')) 
     {
@@ -237,10 +237,10 @@ void loop()
         delay(10);  
       }
           
-      Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
-      Serial.println("(After) Location: " + input);
-      Serial.println("Steps taken: " + String(numOfPulses));
-      Serial.println();
+      // Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
+      // Serial.println("(After) Location: " + input);
+      // Serial.println("Steps taken: " + String(numOfPulses));
+      // Serial.println();
     }
     else if (currentLocation == 'C' && targetLocation == 'C') 
     {
@@ -275,10 +275,10 @@ void loop()
         FastLED.show();     
         delay(10);
       }
-      Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
-      Serial.println("(After) Location: " + input);
-      Serial.println("Steps taken: " + String(numOfPulses));
-      Serial.println();
+      // Serial.println("(Before) Location: " + String(currentLocation) + "" + String(currentIndex));
+      // Serial.println("(After) Location: " + input);
+      // Serial.println("Steps taken: " + String(numOfPulses));
+      // Serial.println();
 
     }
 
@@ -295,5 +295,7 @@ void loop()
     delay(1000);                       //One second delay
     currentLocation = targetLocation;  //Current position is now the old target position
     currentIndex = targetIndex;
+
+    Serial.println(1);
   }
 }
