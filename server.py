@@ -6,6 +6,23 @@ from firebase_admin import credentials, firestore
 import numpy as np
 import os
 from mfrc522 import SimpleMFRC522
+from flask import Flask, render_template
+import serial
+import threading
+import queue
+from flask import Flask, render_template, redirect, url_for
+import serial
+import threading
+import queue
+from flask import jsonify
+
+
+
+
+
+global running
+running = False
+
 
 arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
@@ -17,12 +34,15 @@ callback_done = threading.Event()
 rfid = SimpleMFRC522()
 queue_count = 0
 
+
 def write_read(x):
     arduino.write(x)
     data = arduino.readline()
     return data
 
 def process_request(position):
+    global running
+    running = True
     if position == "A0":
         print(f"A0")
         write_read(b'A0')
@@ -73,62 +93,69 @@ def process_request(position):
         write_read(b'C7')
     else:
         print("Bin: '{}' does not exist!".format(position))
+    
+    
 
 def on_test_snapshot(doc_snap, changes, read_time):
+    global running
+    running = True
     for doc in doc_snap:
         docDict = doc.to_dict()
         position = docDict["position"]
         if position == "A0":
-            print(f"A0")
+            #print(f"A0")
             write_read(b'A0')
         elif position == "A1":
-            print(f"A1")
+            #print(f"A1")
             write_read(b'A1')
         elif position == "A2":
-            print(f"A2")
+            #print(f"A2")
             write_read(b'A2')
         elif position == "A3":
-            print(f"A3")
+            #print(f"A3")
             write_read(b'A3')
         elif position == "A0":
-            print(f"A0")
+            #print(f"A0")
             write_read(b'B0')
         elif position == "B1":
-            print(f"B1")
+            #print(f"B1")
             write_read(b'B1')
         elif position == "B2":
-            print(f"B2")
+            #print(f"B2")
             write_read(b'B2')
         elif position == "B3":
-            print(f"B3")
+            #print(f"B3")
             write_read(b'B3')
         elif position == "C0":
-            print(f"C0")
+            #print(f"C0")
             write_read(b'C0')
         elif position == "C1":
-            print(f"C1")
+            #print(f"C1")
             write_read(b'C1')
         elif position == "C2":
-            print(f"C2")
+            #print(f"C2")
             write_read(b'C2')
         elif position == "C3":
-            print(f"C3")
+            #print(f"C3")
             write_read(b'C3')
         elif position == "C4":
-            print(f"C4")
+            #print(f"C4")
             write_read(b'C4')
         elif position == "C5":
-            print(f"C5")
+            #print(f"C5")
             write_read(b'C5')
         elif position == "C6":
-            print(f"C6")
+            #print(f"C6")
             write_read(b'C6')
         elif position == "C7":
-            print(f"C7")
+            #print(f"C7")
             write_read(b'C7')
     callback_done.set()
 
 def on_queue_snapshot(doc_snap, changes, read_time):
+    global running
+    running = True
+    
     arr = []
 
     #enter the loop only if there are any items in collection on change
@@ -153,7 +180,7 @@ def on_queue_snapshot(doc_snap, changes, read_time):
                         ### RFID Verification ###
                         id = ''
                         while True:
-                            print("Please use rfid tag")
+                            #print("Please use rfid tag")
                             id, text = rfid.read()
                             break
 
@@ -161,38 +188,40 @@ def on_queue_snapshot(doc_snap, changes, read_time):
                         for user in user_docs:
                             user_dict = user.to_dict()
                             if user_dict["rfid_tag"] == id:
-                                print("user found")
+                                #print("user found")
                                 hist_ref.set({
                                     u'user_id': user.id
                                 }, merge=True)
-                            else:
-                                print("Please register RFID tag to user!")
+                           #else:
+                                #print("Please register RFID tag to user!")
                         
                         # send bin to read_write function to be sent to arduino
                         process_request(items_doc.to_dict()["bin_id"])
-                        print(curr_request["id"])
+                        #print(curr_request["id"])
                         db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete() #delete queued item
                     else:
 
                         # no verification since its from phone
                         process_request(items_doc.to_dict()["bin_id"])
-                        print(curr_request)
+                        #print(curr_request)
                         db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete()
-                else:
-                    print(u'item_id: {} does not exist!'.format(hist_doc_dict["item_id"]))
-            else:
-                print(u'history_id: {} does not exist!'.format(curr_request["history_id"]))
-    else:
-        print("No requests!")
+                    
+                    
+                #else:
+                    #print(u'item_id: {} does not exist!'.format(hist_doc_dict["item_id"]))
+            #else:
+                #print(u'history_id: {} does not exist!'.format(curr_request["history_id"]))
+    #else:
+        #print("No requests!")
 
 def on_rfid_snapshot(doc_snap, changes, read_time):
     for doc in doc_snap:
         docDict = doc.to_dict()
         if docDict['live'] == True:
-            print("Please use rfid tag")
+            #print("Please use rfid tag")
             while True:
                 id, text = rfid.read()
-                print(id)
+                #print(id)
                 break
             db.collection(u'Users').document(u'{}'.format(docDict["userid"])).update({ "rfid_tag": id })
             db.collection(u'RFIDinit').document(u'VTflY8VUypi61GVplO8p').update({ "live": False, "userid": "" })
@@ -206,6 +235,64 @@ watch_bin = test_ref.on_snapshot(on_test_snapshot)
 queue_watch = queue_ref.on_snapshot(on_queue_snapshot)
 rfid_watch = rfid_ref.on_snapshot(on_rfid_snapshot)
 
-while True:
-    time.sleep(0.5)
-    # print()
+# while True:
+#     time.sleep(0.5)
+#     # print()
+
+
+
+
+app = Flask(__name__)
+
+ser = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+data_queue = queue.Queue()
+
+
+
+
+
+# define a function that continuously reads from the serial port and puts the data in the queue
+def serial_reader():
+    global running
+    while True:
+        data = ser.readline().decode('utf-8').rstrip()
+        print("Received data:", data)  # add this line
+        if data == '1':
+            running = False
+            print("Yay")
+            
+        
+        data_queue.put(data)
+
+# # start the serial reader thread
+serial_thread = threading.Thread(target=serial_reader)
+serial_thread.daemon = True
+serial_thread.start()
+
+# define the warning route
+@app.route('/warning')
+def warning():
+    return render_template('warning.html')
+
+# define the ready route
+@app.route('/ready')
+def ready():
+    return render_template('ready.html')
+
+# define the index route
+@app.route('/')
+def index():
+    global running
+    #print(running)
+    if running:
+        return render_template('warning.html')
+    else:
+        return render_template('ready.html')
+    
+@app.route('/check_running')
+def check_running():
+    global running
+    return jsonify(running=running)
+
+if __name__ == '__main__':
+    app.run(debug=True)
