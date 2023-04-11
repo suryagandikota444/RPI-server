@@ -74,7 +74,7 @@ void setup()
       delay(100);
    }*/
 
-   Serial.println(1);
+//   Serial.println(1);
 
 
 }
@@ -85,15 +85,15 @@ void loop()
   
   CHSV LEDColor = CHSV(HUE, SAT, VAL);
 
-  Serial.println(1);
+//  Serial.println(1);
   
   while (Serial.available()) 
   {
-    //Serial.println(0);
+    
     String input = Serial.readString();                                            //getting the input - "A1" or "A2" or "C7" or "B3" 
     char targetLocation = input.charAt(0);                         // Parsing the input for theletter - 'A' or 'B' or 'C' 
     int targetIndex = String(input.charAt(1)).toInt();  // Parsing theinput for the number - 0, 1, 2, 3, 4, 5, 6, 7
-
+    Serial.println(input);
     if((currentLocation == 'A' || currentLocation == 'B') && (targetLocation == 'A' || targetLocation == 'B'))
     {
       int temp = (targetIndex - currentIndex) * 50;
@@ -302,6 +302,6 @@ void loop()
     currentLocation = targetLocation;  //Current position is now the old target position
     currentIndex = targetIndex;
 
-    Serial.println(1);
+//    Serial.println(1);
   }
 }
