@@ -120,7 +120,6 @@ void loop()
                 break;
             case 'C':
                 tempPulses = ((targetIndex / 2) - (currentIndex / 2)) * 50;
-                tempPulses = ((targetIndex / 2) - currentIndex) * 50;
                 ledStart = 14;
                 ledEnd = 21
                 break;
