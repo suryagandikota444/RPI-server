@@ -74,7 +74,7 @@ void setup()
       delay(100);
    }*/
 
-//   Serial.println(1);
+  Serial.println(1);
 
 
 }
@@ -302,6 +302,6 @@ void loop()
     currentLocation = targetLocation;  //Current position is now the old target position
     currentIndex = targetIndex;
 
-//    Serial.println(1);
+    Serial.println(1);
   }
 }

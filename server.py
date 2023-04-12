@@ -38,6 +38,10 @@ queue_count = 0
 def write_read(x):
     arduino.write(x)
     data = arduino.readline()
+    time.sleep(2)
+    with open("data.txt", "w") as f:
+        f.write("False")
+        print("False")
     return data
 
 def process_request(position):
@@ -161,6 +165,9 @@ def on_queue_snapshot(doc_snap, changes, read_time):
     #enter the loop only if there are any items in collection on change
     for doc in doc_snap:
         if doc.id != "0":
+            with open("data.txt", "w") as f:
+                f.write("True")
+                print("True")
             curr_request = doc.to_dict() #save curr request to send right data to history record
             curr_request["id"] = doc.id 
             is_alexa = curr_request["is_alexa"] #check if alexa

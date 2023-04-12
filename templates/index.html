@@ -1,10 +1,28 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
-<head>
-    <title>My Flask App</title>
-</head>
-<body>
-    <h1>Welcome to my Flask app!</h1>
-    <p>This is where your information will be displayed</p>
-</body>
+  <head>
+    <title>My App</title>
+  </head>
+  <body>
+    <div id="status"></div>
+    <script>
+      // define a function to fetch the status of running and update the page
+      function updateStatus() {
+        fetch('/check_running')
+          .then(response => response.json())
+          .then(data => {
+            if (data.running) {
+              document.getElementById('status').innerHTML = 'Warning: System is running!';
+            } else {
+              document.getElementById('status').innerHTML = 'Ready: System is not running.';
+            }
+          })
+          .catch(error => console.error(error));
+      }
+
+      // update the status every 2 seconds
+      setInterval(updateStatus, 500);
+    </script>
+  </body>
 </html>
