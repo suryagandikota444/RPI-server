@@ -17,10 +17,10 @@ int ledStart = 0;
 int ledEnd = 0;
 
 //Defining Pre-processor Directives
-#define LED_pin1 12
-#define LED_pin2 9
+#define LED_pin1 12 //LEFT LED
+#define LED_pin2 9 //RIGHT LED
 #define NUM_LEDs 21
-#define BRIGHTNESS 130
+#define BRIGHTNESS 180
 #define HUE 185 //Value between 1 and 360 [RED =0,Green =120, Blue =240]
 #define SAT 255 //KEEP at 255
 #define VAL 255 //KEEP at 255
@@ -137,6 +137,17 @@ void loop()
     }
     
     //Signal the motor now
+
+    
+     //=======================LED CODE TO MAKE THE LIGHTS RED During Rotation Will Ramp up=======================
+     for (int LEDIt = 0; LEDIt<NUM_LEDs; LEDIt++)
+     {
+        LedStrip1[LEDIt] = CRGB::Red;
+        LedStrip2[LEDIt] = CRGB::Red;
+        delay(100);
+        FastLED.show(); 
+     }
+     
     digitalWrite(dirPin, HIGH);
     for (int y = 0; y < (numOfPulses); y++) 
     {
@@ -147,22 +158,39 @@ void loop()
     }
 
     //Displaying the LEDs
-    //First 2 For Loops -> Turn Off LEDs (Not in Use)
+    //First 2 For Loops -> Turn Off LEDs (Not in Use) CAN MAKE THIS INTO ONE LOOP
     //Last For Loop -> Turn On LEDs (In Use)
-    for(int LEDIt = 0; LEDIt < ledStart; LEDIt++)
+
+    //Turning off all LEDS in the strip
+    for(int LEDIt = 0; LEDIt < NUM_LEDs; LEDIt++) 
     {
         LedStrip1[LEDIt] = CRGB::Black;;
         LedStrip2[LEDIt] = CRGB::Black;;
     }
-    for(int LEDIt = ledEnd; LEDIt < 21; LEDIt++)
-    {
-        LedStrip1[LEDIt] = CRGB::Black;;
-        LedStrip2[LEDIt] = CRGB::Black;;
-    }
+    FastLED.show();    
+    delay(10);
     for(int LEDIt = ledStart; LEDIt < ledEnd; LEDIt++)
     {
         LedStrip1[LEDIt] = LEDColor;
         LedStrip2[LEDIt] = LEDColor;
+
+        //Code for lighting up level C not using it right now as we need to plug in the other leds
+        /*==========================================================================
+         * if(targetLocation == 'C')
+        {
+          int side = targetIndex % 2;
+          switch(side) {
+
+            case 0:
+              LedStrip1[LEDIt] = LEDColor;
+            case 1: 
+              LedStrip2[LEDIt] = LEDColor;
+            break;
+
+          }
+        }
+        =============================================================================
+        */
     }
     FastLED.show();    
     delay(10);
