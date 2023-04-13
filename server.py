@@ -26,7 +26,7 @@ from flask import jsonify
 
 arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
 
-cred = credentials.Certificate("csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
+cred = credentials.Certificate("/home/pi/Documents/RPI-server/csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -38,8 +38,8 @@ queue_count = 0
 def write_read(x):
     arduino.write(x)
     data = arduino.readline()
-    time.sleep(2)
-    with open("data.txt", "w") as f:
+    time.sleep(2.5) #SHHHHHHhshhhhh
+    with open("/home/pi/Documents/RPI-server/data.txt", "w") as f:
         f.write("False")
         print("False")
     return data
@@ -165,7 +165,7 @@ def on_queue_snapshot(doc_snap, changes, read_time):
     #enter the loop only if there are any items in collection on change
     for doc in doc_snap:
         if doc.id != "0":
-            with open("data.txt", "w") as f:
+            with open("/home/pi/Documents/RPI-server/data.txt", "w") as f:
                 f.write("True")
                 print("True")
             curr_request = doc.to_dict() #save curr request to send right data to history record
