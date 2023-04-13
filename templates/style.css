@@ -1,9 +1,48 @@
+
+body {
+  background-color: green;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
 h1 {
-    color: white;
-    font-size: 48px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
+  color: white;
+  font-size: 6em;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+body {
+	background-color: red;
+	animation: flashing 1s infinite;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+h1 {
+	color: black;
+	font-size: 80px;
+	font-weight: bold;
+	text-align: center;
+}
+
+@keyframes flashing {
+	0% {
+		background-color: red;
+	}
+	50% {
+		background-color: white;
+	}
+	100% {
+		background-color: red;
+	}
+}
