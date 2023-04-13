@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button</title>
+    <style type="text/css">
+        body {
+            background-color: black;
+        }
+
+        h1 {
+            color: white;
+            font-size: 72px;
+            text-align: center;
+            padding-top: 16%;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <h1>Retrieve the item</h1>
+    <form method="POST">
+        <input type="hidden" name="clicked" value="true">
+        <button type="submit" name="done">Done</button>
+    </form>
+</body>
+</html>

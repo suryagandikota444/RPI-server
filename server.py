@@ -171,6 +171,10 @@ def on_queue_snapshot(doc_snap, changes, read_time):
             curr_request = doc.to_dict() #save curr request to send right data to history record
             curr_request["id"] = doc.id 
             is_alexa = curr_request["is_alexa"] #check if alexa
+            is_checkout = curr_request["is_checkout"]
+            with open("data2.txt", "w") as f2:
+                f2.write(is_checkout)
+                
             
             # route for links between collection is: History -> Items -> Bin 
             hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"])) # first, history
