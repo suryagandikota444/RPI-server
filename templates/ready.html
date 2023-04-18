@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 	<title>Ready For Requests</title>
@@ -31,5 +31,70 @@
     setInterval(function() {
         location.reload();
     }, 500);
-</script>
+</script> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<title>Ready For Requests</title>
+	<style>
+		body {
+			background-color: green;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			color: white;
+			font-size: 6em;
+			font-weight: bold;
+			text-align: center;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		}
+	</style>
+</head>
+<body>
+    <div id="content"></div>
+	<div id="done-bttn"><input type="button" value="click me" onclick="setFalse()"/></div>
+
+    <script>
+        function updateContent() {
+            $.getJSON("/get_text_file_value", function(data) {
+				console.log(data.value);
+                if (data.value == "True") {
+                    $("#content").html("Processing");
+                    $("#done-bttn").show();
+
+                } else if (data.value == "False") {
+                    $("#content").html("Ready for requests");
+					$("#done-bttn").hide();
+                }
+            });
+        }
+
+		function setFalse() {
+			$.post('set_false', {}, function(data) {
+				if (data.status === 'success') {
+					console.log('Set!')
+				} else {
+					console.log('broken!')
+				}
+			});
+		}
+
+        $(document).ready(function() {
+            updateContent();
+            setInterval(updateContent, 1000); // Check for updates every 5 seconds
+        });
+    </script>
+</body>
+</html>
+
 

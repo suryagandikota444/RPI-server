@@ -7,15 +7,15 @@ import numpy as np
 import os
 from mfrc522 import SimpleMFRC522
 from flask import Flask, render_template
-import serial
+#import serial
 import threading
 import queue
 from flask import Flask, render_template, redirect, url_for
-import serial
+#import serial
 import threading
 import queue
 from flask import jsonify
-
+import ast
 
 
 
@@ -25,8 +25,9 @@ from flask import jsonify
 
 
 arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1)
+print(arduino)
 
-cred = credentials.Certificate("/home/pi/Documents/RPI-server/csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
+cred = credentials.Certificate("/home/pi/Documents/AS/csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -38,10 +39,15 @@ queue_count = 0
 def write_read(x):
     arduino.write(x)
     data = arduino.readline()
-    time.sleep(2.5) #SHHHHHHhshhhhh
-    with open("/home/pi/Documents/RPI-server/data.txt", "w") as f:
-        f.write("False")
-        print("False")
+    #time.sleep(2.5) #SHHHHHHhshhhhh
+    dataVal = ""
+    with open('/home/pi/Documents/AS/data.txt', 'r') as file:
+        dataVal = ast.literal_eval(file.read().strip())
+
+    while dataVal:
+        with open('/home/pi/Documents/AS/data.txt', 'r') as file:
+            dataVal = ast.literal_eval(file.read().strip())
+    print('success')        
     return data
 
 def process_request(position):
@@ -165,7 +171,7 @@ def on_queue_snapshot(doc_snap, changes, read_time):
     #enter the loop only if there are any items in collection on change
     for doc in doc_snap:
         if doc.id != "0":
-            with open("/home/pi/Documents/RPI-server/data.txt", "w") as f:
+            with open("/home/pi/Documents/AS/data.txt", "w") as f:
                 f.write("True")
                 print("True")
             curr_request = doc.to_dict() #save curr request to send right data to history record
@@ -173,9 +179,8 @@ def on_queue_snapshot(doc_snap, changes, read_time):
             is_alexa = curr_request["is_alexa"] #check if alexa
             is_checkout = curr_request["is_checkout"]
             with open("data2.txt", "w") as f2:
-                f2.write(is_checkout)
+                f2.write(f"{is_checkout}")
                 
-            
             # route for links between collection is: History -> Items -> Bin 
             hist_ref = db.collection(u"History").document(u'{}'.format(curr_request["history_id"])) # first, history
             hist_doc = hist_ref.get()

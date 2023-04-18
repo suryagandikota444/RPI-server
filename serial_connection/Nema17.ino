@@ -95,12 +95,12 @@ void loop()
             case 'B':
                 tempPulses = (targetIndex - currentIndex) * 50;
                 ledStart = 7;
-                ledEnd = 14
+                ledEnd = 14;
                 break;
             case 'C':
                 tempPulses = ((targetIndex / 2) - currentIndex) * 50;
                 ledStart = 14;
-                ledEnd = 21
+                ledEnd = 21;
                 break;
         }
     }
@@ -121,7 +121,7 @@ void loop()
             case 'C':
                 tempPulses = ((targetIndex / 2) - (currentIndex / 2)) * 50;
                 ledStart = 14;
-                ledEnd = 21
+                ledEnd = 21;
                 break;
         }
     }
@@ -129,11 +129,11 @@ void loop()
     //Adjusting for negative numbers and 3:1 Gear Ratio
     if(tempPulses < 0)
     {
-        numOfPulses = (tempPulses + 200) * 3;
+        numOfPulses = (tempPulses + 200) * 3.2;
     }
     else
     {
-        numOfPulses = tempPulses * 3;
+        numOfPulses = tempPulses * 3.2;
     }
     
     //Signal the motor now
@@ -164,8 +164,8 @@ void loop()
     //Turning off all LEDS in the strip
     for(int LEDIt = 0; LEDIt < NUM_LEDs; LEDIt++) 
     {
-        LedStrip1[LEDIt] = CRGB::Black;;
-        LedStrip2[LEDIt] = CRGB::Black;;
+        LedStrip1[LEDIt] = CRGB::Black;
+        LedStrip2[LEDIt] = CRGB::Black;
     }
     FastLED.show();    
     delay(10);

@@ -1,43 +1,54 @@
-
-from flask import Flask, render_template
+from firebase_admin import credentials, firestore
+import firebase_admin
+from flask import Flask, render_template, request, jsonify
 import ast
-
+import os
 
 app = Flask(__name__)
+cred = credentials.Certificate("/home/pi/Documents/RPI-server/csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
+firebase_admin.initialize_app(cred)
 
-
-# define the warning route
-@app.route('/warning')
-def warning():
-    return render_template('warning.html')
-
-# define the ready route
-@app.route('/ready')
-def ready():
-    return render_template('ready.html')
+db = firestore.client()
 
 # define the index route
+# @app.route('/')
+# def index():
+#     with open('data.txt', 'r') as file:
+#         value = ast.literal_eval(file.read().strip())
+
+#     with open('data2.txt', 'r') as file2:
+#         value2 = ast.literal_eval(file2.read().strip())
+
+#     if value:
+#         return render_template('warning.html')
+#     elif not value and value2:
+#         if request.method == 'POST' and 'clicked' in request.form:
+#             return render_template('ready.html') 
+#     elif not value and not value2:
+#         return render_template('button2.html')
+#     else:
+#         return render_template('ready.html')
+    
+#     return render_template('ready.html')
+    
 @app.route('/')
 def index():
-    with open('data.txt', 'r') as file:
-        value = ast.literal_eval(file.read().strip())
+    return render_template('ready.html')
 
-    with open('data2.txt', 'r') as file2:
-        value2 = ast.literal_eval(file2.read().strip())
-
-    if value:
-        return render_template('warning.html')
-    elif not value and value2:
-        if request.method == 'POST' and 'clicked' in request.form:
-            return render_template('ready.html')
-    elif not value and not value2:
-        return render_template('button2.html')
+@app.route('/get_text_file_value')
+def get_text_file_value():
+    if os.path.exists("/home/pi/Documents/AS/data.txt"):
+        with open("/home/pi/Documents/AS/data.txt", "r") as f:
+            value = f.read().strip()
+        return jsonify(value=value)
     else:
-        return render_template('ready.html')
-    
-    
-    
-    
+        return jsonify(value=None)
+
+@app.route('/set_false', methods=['POST'])
+def set_false():
+    with open('/home/pi/Documents/AS/data.txt', 'w') as f:
+        f.write('False')
+    return jsonify(status='success')   
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5002)
