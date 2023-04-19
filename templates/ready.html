@@ -1,100 +1,97 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-	<title>Ready For Requests</title>
-	<style>
-		body {
-			background-color: green;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
-			padding: 0;
-		}
-
-		h1 {
-			color: white;
-			font-size: 6em;
-			font-weight: bold;
-			text-align: center;
-			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-		}
-	</style>
-</head>
-<body>
-	<h1>Ready For Requests!</h1>
-</body>
-</html>
-
-<script>
-    setInterval(function() {
-        location.reload();
-    }, 500);
-</script> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<title>Ready For Requests</title>
-	<style>
-		body {
-			background-color: green;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
-			padding: 0;
-		}
+    <title>Ready For Requests</title>
+    <style>
+        body {
+            background-color: green;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-		h1 {
-			color: white;
-			font-size: 6em;
-			font-weight: bold;
-			text-align: center;
-			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-		}
-	</style>
+        h1 {
+            color: white;
+            font-size: 6em;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .button {
+            width: 600px;
+            height: 400px;
+            font-size: 200px;
+            background-color: #4caf50;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 16px;
+            outline: none;
+            display: none; /* Initially hide the button */
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <div id="content"></div>
-	<div id="done-bttn"><input type="button" value="click me" onclick="setFalse()"/></div>
+    <div class="flex-wrapper">
+        <h1 id="content"></h1>
+    </div>
+    <div class="flex-wrapper">
+        <button id="done-bttn" class="button">Done</button>
+    </div>
 
     <script>
         function updateContent() {
             $.getJSON("/get_text_file_value", function(data) {
-				console.log(data.value);
+                console.log(data.value);
                 if (data.value == "True") {
                     $("#content").html("Processing");
+                    $("body").css({"background-color": "red"})
                     $("#done-bttn").show();
 
                 } else if (data.value == "False") {
                     $("#content").html("Ready for requests");
-					$("#done-bttn").hide();
+					$("body").css({"background-color": "green"})
+                    $("#done-bttn").hide();
                 }
             });
         }
 
-		function setFalse() {
-			$.post('set_false', {}, function(data) {
-				if (data.status === 'success') {
-					console.log('Set!')
-				} else {
-					console.log('broken!')
-				}
-			});
-		}
+        function setFalse() {
+            $.post('set_false', {}, function(data) {
+                if (data.status === 'success') {
+                    console.log('Set!')
+                } else {
+                    console.log('broken!')
+                }
+            });
+        }
 
         $(document).ready(function() {
             updateContent();
-            setInterval(updateContent, 1000); // Check for updates every 5 seconds
+            setInterval(updateContent, 1000); // Check for updates every 1 second
+
+            // Attach event listener to the button
+            $("#done-bttn").click(function() {
+                setFalse();
+            });
         });
     </script>
 </body>
 </html>
-
-

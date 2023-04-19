@@ -3,6 +3,7 @@ import firebase_admin
 from flask import Flask, render_template, request, jsonify
 import ast
 import os
+import random
 
 app = Flask(__name__)
 cred = credentials.Certificate("/home/pi/Documents/RPI-server/csce483-capstone-firebase-adminsdk-oef2p-34a354f736.json")
@@ -47,8 +48,11 @@ def get_text_file_value():
 @app.route('/set_false', methods=['POST'])
 def set_false():
     with open('/home/pi/Documents/AS/data.txt', 'w') as f:
-        f.write('False')
+        f.write("False")
     return jsonify(status='success')   
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5002)
+    try:
+        app.run(debug=True, port=5002)
+    except:
+        app.run(debug=True, port=random.randint(5010, 6000))

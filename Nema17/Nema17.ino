@@ -16,6 +16,8 @@ int tempPulses = 0;
 int ledStart = 0;
 int ledEnd = 0;
 
+int countRots = 0;
+
 //Defining Pre-processor Directives
 #define LED_pin1 12 //LEFT LED
 #define LED_pin2 9 //RIGHT LED
@@ -72,6 +74,24 @@ void loop()
   
   while (Serial.available()) 
   {
+    countRots += 1;
+    if (countRots % 3 == 0) {
+      for (int LEDIt = 0; LEDIt<NUM_LEDs; LEDIt++)
+       {
+          LedStrip1[LEDIt] = CRGB::Red;
+          LedStrip2[LEDIt] = CRGB::Red;
+          delay(100);
+          FastLED.show(); 
+       }
+      while (analogRead(A2) > 100) {
+        digitalWrite(stepPin, HIGH);
+        delayMicroseconds(5000);
+        digitalWrite(stepPin, LOW);
+        delayMicroseconds(5000);
+      } 
+      currentLocation = "A";
+      currentIndex = 0;
+    }
     //Getting the input: "A1" or "A2", or "C6" respectively
     String input = Serial.readString();
 
@@ -129,11 +149,11 @@ void loop()
     //Adjusting for negative numbers and 3:1 Gear Ratio
     if(tempPulses < 0)
     {
-        numOfPulses = (tempPulses + 200) * 3.2;
+        numOfPulses = (tempPulses + 200) * 3.1;
     }
     else
     {
-        numOfPulses = tempPulses * 3.2;
+        numOfPulses = tempPulses * 3.1;
     }
     
     //Signal the motor now
