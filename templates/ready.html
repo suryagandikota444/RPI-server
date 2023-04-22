@@ -69,6 +69,10 @@
                     $("#content").html("Ready for requests");
 					$("body").css({"background-color": "green"})
                     $("#done-bttn").hide();
+                } else if (data.value == "RFID_Verification") {
+                    $("#content").html("Please Scan RFID tag!");
+					$("body").css({"background-color": "yellow"})
+                    $("#done-bttn").hide();
                 }
             });
         }

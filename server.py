@@ -161,6 +161,8 @@ def on_queue_snapshot(doc_snap, changes, read_time):
                             # branch for alexa because it needs rfid verification
                             if is_alexa:
                                 ### RFID Verification ###
+                                with open("/home/pi/Documents/AS/data.txt", "w") as f:
+                                    f.write("RFID_Verification")
                                 id = ''
                                 while True:
                                     print("Please use rfid tag")
@@ -178,13 +180,13 @@ def on_queue_snapshot(doc_snap, changes, read_time):
                                         }, merge=True)
                                     else:
                                         print("Please register RFID tag to user!")
-                                
+                                with open("/home/pi/Documents/AS/data.txt", "w") as f:
+                                    f.write("True")
                                 # send bin to read_write function to be sent to arduino
                                 process_request(items_doc.to_dict()["bin_id"], curr_request["id"])
                                 # print(curr_request["id"])
                                 # db.collection(u'Requests').document(u'{}'.format(curr_request["id"])).delete() #delete queued item
                             else:
-
                                 # no verification since its from phone
                                 process_request(items_doc.to_dict()["bin_id"], curr_request["id"])
                                 #print(curr_request)
