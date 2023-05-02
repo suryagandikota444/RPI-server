@@ -14,7 +14,6 @@ The necessary dependencies can be found in "requirements.txt"
 
 
 # Running Instructions
-*For LocalHost on web:* 
 1. `cd RPI-server`
 2. `python server.py`
 3. `python server_app.py`
